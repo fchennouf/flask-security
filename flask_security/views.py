@@ -113,11 +113,17 @@ def register():
         form_data = request.form
 
     form = form_class(form_data)
-
     if form.validate_on_submit():
         user = register_user(**form.to_dict())
         form.user = user
 
+        role = form_data.get('hidden_account_type')
+        if role not in _security.roles:
+            raise Exception('Role does not exist')
+        if not _datastore.find_role(role):
+            raise Exception('Role does not exist.')
+
+        _datastore.add_role_to_user(user, role)
         if not _security.confirmable or _security.login_without_confirmation:
             after_this_request(_commit)
             login_user(user)
