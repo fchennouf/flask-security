@@ -113,7 +113,6 @@ def register():
         form_data = request.form
 
     form = form_class(form_data)
-
     if form.validate_on_submit():
         user = register_user(**form.to_dict())
         form.user = user
