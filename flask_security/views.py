@@ -124,6 +124,8 @@ def register():
             raise Exception('Role does not exist.')
 
         _datastore.add_role_to_user(user, role)
+        user.save()
+
         if not _security.confirmable or _security.login_without_confirmation:
             after_this_request(_commit)
             login_user(user)
